@@ -1,0 +1,6 @@
+=== CHƯA CÓ THƯ VIỆN THÌ CÀI ===
+pip install requests colorama pystyle tqdm
+
+Mở File start.bat để mở tool nhanh (PC) hoặc python zLocket-Tool.py
+
+Version hỗ trợ: Python 3.12.2
