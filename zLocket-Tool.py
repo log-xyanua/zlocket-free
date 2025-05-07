@@ -1,9 +1,9 @@
 # ==================================
 #!/usr/bin/env python
 # coding: utf-8
-# Telegram: @wus_team
+# Telegram: @gnolswft
 # Version: 1.0.2
-# Github: https://github.com/wusthanhdieu
+# Github: https://github.com/log-xyanua
 # Description: zLocket Tool Open Source
 # ==================================
 import os, re, time, queue, shutil, ctypes, random, threading
@@ -340,7 +340,8 @@ class zLocket:
 ⠀⠀⠀⠀⠀⠀⠀⠀⡇⢀⢸⠀⣸⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⡐⠈⠳⡀⢱⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⣀⠇⢠⢸⠀⡗⠀⠀⠀⠀⠀⠀⠀⢠⢔⢁⠃⠀⠀⡇⡈⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠓⠓⢣⢊⠀⡇⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⢮⣂⠇⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    Hello World I'm xyanua.⠀
     Press [ENTER] to continue..."""[
         1:
     ]
@@ -902,7 +903,7 @@ class zLocket:
 \033[35m[+] Message: {note + getattr(self, 'last_name', '') or 'None'}
 \033[34m[+] Threads: {threads or 'None'}
 \033[33m[+] Emojis: {'ON' if hasattr(self, "enable_emoji") and self.enable_emoji else 'OFF'}
-\033[0;31m[+] Telegram: @wus_team"""
+\033[0;31m[+] Telegram: @gnolswft"""
         )
         print(
             "".join(
