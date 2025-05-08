@@ -2,8 +2,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 # Telegram: @gnolswft
-# Version: 1.0.2
+# Version: 1.0.4
 # Github: https://github.com/log-xyanua
+# Description: zLocket Tool Open Source
 # ==================================
 import os, re, time, queue, shutil, ctypes, random, threading
 import requests
@@ -34,7 +35,7 @@ class zLocket:
         self.request_timeout = 30
         self.API_KEY = None
         self.NAME_TOOL = "zLocket Tool"
-        self.VERSION_TOOL = "v1.0.2"
+        self.VERSION_TOOL = "v1.0.4"
         self.base_headers = {
             "Host": "api.locketcamera.com",
             "Accept": "*/*",
@@ -281,14 +282,14 @@ class zLocket:
             try:
                 self.num_threads = int(
                     Write.Input(
-                        "[+] Nhập Threads (1 - 10000) > ",
+                        "[+] Nhập Threads (1 - 5000) > ",
                         Colors.red_to_yellow,
                         interval=0.005,
                     ).strip()
                 )
-                if self.num_threads < 1 or self.num_threads > 10000:
+                if self.num_threads < 1 or self.num_threads > 5000:
                     print(
-                        f"{Fore.RED}⚠️ Số Threads Tối Thiểu Là 1, Tối Đa Là 10000, Số Threads Càng Cao {self.NAME_TOOL} Request Càng Nhiều.{Style.RESET_ALL}"
+                        f"{Fore.RED}⚠️ Số Threads Tối Thiểu Là 1, Tối Đa Là 5000, Số Threads Càng Cao {self.NAME_TOOL} Request Càng Nhiều.{Style.RESET_ALL}"
                     )
                     continue
                 break
@@ -337,10 +338,10 @@ class zLocket:
          : . . . .       _     /
         . . . . .          `-.:
        . . . ./  - .          )
-      .  . . |  _____..---.._/ ____ @gnolswft _
-~---~~~~----~~~~             ~~
-    Tool by @xyanua.
-    Press [ENTER] to continue..."""[
+      .  . . |  _____..---.._/ ____ @gnolswft ____
+~-----~~~~----~~~~             ~~
+      Tool by @xyanua.
+      Press [ENTER] to continue..."""[
         1:
     ]
     os.system("title 💰 zLocket Bulk Friend Request Tool by @gonlswft 💰")
@@ -857,23 +858,11 @@ class zLocket:
         except Exception as e:
             return False
 
-    def run_thread_worker(self, thread_id: int):
-        completed_count = 0
-        while completed_count < 10 and not self.should_stop:
-            if self.zlocket(thread_id):
-                completed_count += 1
-
-    def printer_worker(self):
-        while not self.should_stop:
-            try:
-                message = self.print_queue.get(timeout=0.1)
-                with self.print_lock:
-                    print(message)
-                self.print_queue.task_done()
-            except queue.Empty:
-                time.sleep(0.01)
-            except Exception:
-                pass
+    def task_worker(self, thread_id: int):
+        try:
+            self.zlocket(thread_id)
+        except Exception as e:
+            self.messages.append(f"❌ Thread-{thread_id} error: {str(e)}")
 
     def run(self, target: str = None, threads: int = None, note: str = None) -> None:
         target = target or self.target_friend_uid
@@ -881,9 +870,12 @@ class zLocket:
         note = note or self.note_target
         self.should_stop = False
         self.successful_runs = 0
+        cycle_count = 0
+
         printer_thread = threading.Thread(target=self.printer_worker)
         printer_thread.daemon = True
         printer_thread.start()
+
         print("")
         print(
             "".join(
@@ -921,28 +913,29 @@ class zLocket:
             f"{Fore.GREEN}Starting attack with {threads} concurrent threads...{Style.RESET_ALL}"
         )
         try:
-            with ThreadPoolExecutor(max_workers=threads) as executor:
-                futures = [
-                    executor.submit(self.run_thread_worker, i + 1)
-                    for i in range(threads)
-                ]
-                for future in futures:
-                    try:
-                        future.result()
-                    except Exception:
-                        pass
+            while True:
+                if self.should_stop or self.successful_runs >= threads * 5:
+                    break
+                cycle_count += 1
+                thread_list = []
+                start_time = time.time()
+                for i in range(threads):
+                    if self.should_stop or self.successful_runs >= threads * 5:
+                        break
+                    t = threading.Thread(target=self.task_worker, args=(i + 1,))
+                    t.daemon = True
+                    thread_list.append(t)
+                    t.start()
+                for t in thread_list:
+                    t.join(timeout=max(0, self.request_timeout - (time.time() - start_time)))
+                if time.time() - start_time > self.request_timeout:
+                    print(
+                        f"{Fore.RED}⚠️ Thread {cycle_count} failed, trying to the next thread.{Style.RESET_ALL}"
+                    )
 
             print(
                 f"{Fore.RED}Completed! Sent {self.successful_runs} friend requests.{Style.RESET_ALL}"
             )
-            done, not_done = wait(futures, timeout=15)
-            if not_done:
-                print(
-                    f"{Fore.RED}⚠️ Connection Timeout after 15 seconds.{Style.RESET_ALL}"
-                )
-                os._exit(1)
-            for future in not_done:
-                future.cancel()
         except KeyboardInterrupt:
             print(f"{Fore.YELLOW}Stopping all threads...{Style.RESET_ALL}")
             self.should_stop = True
@@ -952,6 +945,18 @@ class zLocket:
         finally:
             self.should_stop = True
             printer_thread.join(timeout=1.0)
+
+    def printer_worker(self):
+        while not self.should_stop:
+            try:
+                message = self.print_queue.get(timeout=0.1)
+                with self.print_lock:
+                    print(message)
+                self.print_queue.task_done()
+            except queue.Empty:
+                time.sleep(0.01)
+            except Exception:
+                pass
 
 if __name__ == "__main__":
     locket = zLocket()
