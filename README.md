@@ -12,7 +12,7 @@ A powerful tool for Locket Camera application.
 ## Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/zLocket-Tool-Pro.git
+git clone https://github.com/wsxyanua/zlocket-tool.git
 cd zLocket-Tool-Pro
 ```
 
@@ -35,5 +35,5 @@ python zLocket-Tool.py
 ```
 
 ## Requirements
-- Python 3.x
+- Python 3.12
 - Required packages (see requirements.txt)
